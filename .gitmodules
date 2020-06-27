@@ -1,7 +1,7 @@
 [submodule "ansible-role-nginx"]
-	path = simplemonitoring/roles/nginx
+	path = roles/nginx
 	url = https://github.com/geerlingguy/ansible-role-nginx.git
 
 [submodule "ansible-role-httpd"]
-	path = simplemonitoring/roles/httpd
+	path = roles/httpd
 	url = https://github.com/bertvv/ansible-role-httpd.git
