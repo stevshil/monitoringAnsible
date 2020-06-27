@@ -1,0 +1,3 @@
+- include_tasks: Apache.yml
+- include_tasks: Nginx.yml
+- include_tasks: HAProxy.yml

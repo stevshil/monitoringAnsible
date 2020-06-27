@@ -1,0 +1,34 @@
+- name: Create ec2 for Nginx
+  ec2:
+    key_name: "{{ sshkey }}"
+    group: "{{ secgrps['web'] }}"
+    instance_type: t2.micro
+    image: "{{ ami[region] }}"
+    wait: true
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ subnets['private'] }}"
+    assign_public_ip: yes
+    instance_tags:
+      Name: "{{ project_name }}.Nginx"
+      Environment: "{{ env }}"
+  when: groups['nginx'] | length == 0
+  register: ec2Nginx
+
+- name: Wait for SSH to come up
+  delegate_to: "{{ item.public_dns_name }}"
+  wait_for_connection:
+    delay: 30
+    timeout: 320
+  when: groups['nginx'] | length == 0
+  with_items: "{{ ec2Nginx.instances }}"
+
+- name: Add to inventory
+  lineinfile:
+    dest: "{{ lookup('env','ANSIBLEENV') }}/hosts"
+    insertafter: '^\[nginx\]'
+    line: "{{ item.public_dns_name }} instance_id={{ item.id}} private_ip={{ item.private_ip }}"
+  when: groups['nginx'] | length == 0
+  with_items: "{{ ec2Nginx.instances }}"
+
+- name: Refresh inventory
+  meta: refresh_inventory

@@ -1,0 +1,6 @@
+- hosts: apache
+  become: True
+  gather_facts: True
+  roles:
+    - httpd
+    - posthttpd

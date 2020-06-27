@@ -1,0 +1,79 @@
+# Generated from Ansible template
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+  {% for key,value in haproxy_global.items() %}
+    {{key}}     {{value}}
+  {% endfor %}
+
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+  {% for key,value in haproxy_defaults.items() %}
+  {{key}}     {{value}}
+  {% endfor %}
+
+  {% for value in haproxy_default_options %}
+  option                  {{value}}
+  {% endfor %}
+
+  {% for key,value in haproxy_default_timeouts.items() %}
+  timeout  {{key}}     {{value}}
+  {% endfor %}
+
+
+#---------------------------------------------------------------------
+#HAProxy Monitoring Config
+#---------------------------------------------------------------------
+{% for config in haproxy_listen %}
+listen {{config.name}} {{config.listen}}
+  mode {{config.mode}}
+  {% if config.options is defined %}
+  {% for option in config.options %}
+  option {{option}}
+  {% endfor %}
+  {% endif %}
+  {% if config.stats is defined %}
+  {%for key,value in config.stats.items() %}
+  stats {{ key }}    {{value}}
+  {% endfor %}
+  {% endif %}
+{% endfor %}
+
+#---------------------------------------------------------------------
+# FrontEnd Configuration
+#---------------------------------------------------------------------
+{% for config in haproxy_frontend %}
+frontend {{config.name}}
+  bind {{config.listen}}
+  default_backend {{config.default_backend}}
+  {% if config.option is defined %}
+  {% for option in config.option %}
+  option {{option}}
+  {% endfor %}
+  {% endif %}
+{% endfor %}
+
+#---------------------------------------------------------------------
+# BackEnd roundrobin as balance algorithm
+#---------------------------------------------------------------------
+{% for config in haproxy_backend %}
+backend {{config.name}}
+  balance {{config.balance}}
+  {% if config.option is defined %}
+    {% for option in config.option %}
+      option {{option}}
+    {% endfor %}
+  {% endif %}
+  {% for server in config.servers %}
+    server {{server.name}} {{server.listen}} {% if server.param is defined -%}
+    {% for param in server.param %}
+        {{param}}
+      {% endfor %}
+    {%- endif %}
+  {% endfor %}
+{% endfor %}

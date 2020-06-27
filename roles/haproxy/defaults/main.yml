@@ -1,0 +1,80 @@
+haproxy_version: latest
+haproxy_cfg: /etc/haproxy/haproxy.cfg
+
+haproxy_global:
+  log: "{{ ansible_fqdn }} local2"
+  chroot: /var/lib/haproxy
+  pidfile: /var/run/haproxy.pid
+  maxconn: 4000
+  user: haproxy
+  group: haproxy
+  stats: socket /var/lib/haproxy/stats
+  daemon:
+
+haproxy_defaults:
+  mode: http
+  log: global
+  retries: 3
+  maxconn: 3000
+
+haproxy_default_options:
+  - httplog
+  - dontlognull
+  - http-server-close
+  - forwardfor       except 127.0.0.0/8
+  - redispatch
+
+haproxy_default_timeouts:
+  http-request: 10s
+  queue: 1m
+  connect: 10s
+  client: 1m
+  server: 1m
+  http-keep-alive: 10s
+  check: 10s
+
+haproxy_listen:
+  - name: stats
+    description: Global stats
+    listen: '0.0.0.0:9600'
+    mode: http
+    default_backend: app-main
+    monitoring: backend
+    stats:
+      enable: true
+      show-legends: true
+      refresh: 10s
+      realm: Haproxy\ Statistics
+      admin: if TRUE
+      uri: /stats
+    options:
+      - forwardfor
+      - httpclose
+    auth:
+      - user: admin
+        passwd: '$1$O0tsW32q$Oe9mTq4fhXgbVrc3Sd4Kr.'
+
+haproxy_frontend:
+  - name: main
+    description: Default frontend
+    listen: '*:80'
+    default_backend: app-main
+    option:
+      - forwardfor
+      - http-server-close
+
+haproxy_backend:
+  - name: app-main
+    description: Default backend
+    balance: roundrobin
+    option:
+      - httpchk HEAD / HTTP/1.1\r\nHost:\ localhost
+    servers:
+      - name: apache
+        listen: "{{ hostvars[groups['apache'][0]].private_ip }}:80"
+        param:
+          - check
+      - name: nginx
+        listen: "{{ hostvars[groups['nginx'][0]].private_ip }}:80"
+        param:
+          - check

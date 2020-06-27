@@ -1,0 +1,26 @@
+# Build the entire monitoring solution
+- hosts: ec2
+  connection: local
+  gather_facts: false
+  roles:
+    - ec2
+
+- hosts: apache
+  become: True
+  gather_facts: True
+  roles:
+    - httpd
+    - posthttpd
+
+- hosts: nginx
+  become: True
+  gather_facts: True
+  roles:
+    - prenginx
+    - nginx
+
+- hosts: proxy
+  become: True
+  gather_facts: True
+  roles:
+    - haproxy

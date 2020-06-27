@@ -1,0 +1,17 @@
+- name: Check if NGINX is already installed
+  shell: "rpm -qa | grep nginx"
+  when: (ansible_distribution == "Amazon" )
+  register: nginx
+  ignore_errors: yes
+
+# - name: nginx variable
+#   debug:
+#     msg: "{{ nginx }}"
+
+- name: Remove yum repo that amazon installs
+  shell: rm -f /etc/yum.repos.d/nginx.conf
+  ignore_errors: yes
+
+- name: Install NGINX if Amazon Linux
+  shell: amazon-linux-extras install -y nginx1
+  when: (ansible_distribution == "Amazon" ) and "{{ nginx.stdout_lines | length }} < 1"

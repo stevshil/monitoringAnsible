@@ -1,0 +1,7 @@
+- name: Create index file
+  template:
+    src: index.html.j2
+    dest: "{{ httpd_document_root }}/index.html"
+    owner: root
+    group: root
+    mode: 0644
