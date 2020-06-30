@@ -1,0 +1,16 @@
+logstash_inputs:
+  -  name: file
+     config:
+       path: '"/var/log/messages"'
+logstash_outputs:
+  - name: stdout
+  - name: elasticsearch
+    config:
+      hosts:
+        - "{{ hostvars[groups['elk'][0]].private_ip }}:{{elasticsearch_http_port}}"
+logstash_filters:
+  use: no
+  config:
+    - name: grok
+      attrs:
+        match: '{ "message" => "%{IP:client} %{WORD:method} %{URIPATHPARAM:request} %{NUMBER:bytes} %{NUMBER:duration}" }'

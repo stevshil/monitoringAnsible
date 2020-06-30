@@ -5,7 +5,13 @@ local1 ansible_host=127.0.0.1 ansible_connection=local
 local2 ansible_host=127.0.0.1 ansible_connection=local
 
 [apache]
+ec2-18-202-253-89.eu-west-1.compute.amazonaws.com instance_id=i-0b0de9349b0031c42 private_ip=172.31.27.26
 
 [nginx]
+ec2-63-33-69-3.eu-west-1.compute.amazonaws.com instance_id=i-0f851f9f36b684c8b private_ip=172.31.16.159
 
 [proxy]
+ec2-54-229-52-35.eu-west-1.compute.amazonaws.com instance_id=i-0e6b71fb050d58a20 private_ip=172.31.28.130
+
+[elk]
+ec2-54-229-3-247.eu-west-1.compute.amazonaws.com instance_id=i-00a3ed0906d2673cd private_ip=172.31.25.142

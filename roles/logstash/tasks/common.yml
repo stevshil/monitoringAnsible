@@ -1,0 +1,53 @@
+- name: Set logstash user
+  template:
+    src: defaults_logstash.j2
+    dest: /etc/default/logstash
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create input configuration
+  template:
+    src: input.conf.j2
+    dest: /etc/logstash/conf.d/input.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: input
+  notify: "restart logstash"
+
+- name: Create output configuration for Elasticsearch and stdout
+  template:
+    src: output.conf.j2
+    dest: /etc/logstash/conf.d/output.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: output
+  notify: "restart logstash"
+
+# - name: Filter on
+#   debug:
+#     msg:
+#       - "Logstash use = {{logstash_filters}}"
+
+- name: Create filters for service
+  template:
+    src: filters.conf.j2
+    dest: /etc/logstash/conf.d/filters.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: "logstash_filters.use == true"
+  register: filter
+  notify: "restart logstash"
+
+- name: Kill all possible logstash processes for restart
+  shell: kill -9 `ps -ef | grep logstash | grep -v grep | awk '{print $2}'`
+  when: input.changed or output.changed or filter.changed
+
+- name: Restart logstash because of config change
+  service:
+    name: logstash
+    state: restarted
+  when: input.changed or output.changed or filter.changed

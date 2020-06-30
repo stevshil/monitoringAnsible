@@ -1,0 +1,33 @@
+- name: Install Logstash for RHEL system
+  yum:
+    name: "https://artifacts.elastic.co/downloads/logstash/logstash-{{ logstash_version }}.rpm"
+    state: installed
+
+- name: Override default systemd for logstash
+  template:
+    src: systemd_logstash.j2
+    dest: /etc/systemd/system/logstash.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Make sure logstash is running and enabled Debian
+  service:
+    name: logstash
+    enabled: yes
+    state: started
+    daemon_reload: yes
+  when: ansible_os_family == "RedHat"
+
+- name: Journald Limit Burst
+  template:
+    src: journald.conf.j2
+    dest: /etc/systemd/journald.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted

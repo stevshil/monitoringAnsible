@@ -5,12 +5,21 @@
   roles:
     - ec2
 
+- hosts: elk
+  become: True
+  gather_facts: True
+  roles:
+    - elasticsearch
+    - kibana
+
 - hosts: apache
   become: True
   gather_facts: True
   roles:
     - httpd
     - posthttpd
+    - java
+    - logstash
 
 - hosts: nginx
   become: True
@@ -18,9 +27,13 @@
   roles:
     - prenginx
     - nginx
+    - java
+    - logstash
 
 - hosts: proxy
   become: True
   gather_facts: True
   roles:
     - haproxy
+    - java
+    - logstash

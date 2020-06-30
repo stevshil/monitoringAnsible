@@ -9,6 +9,14 @@ nginx_vhosts:
     root: /usr/share/nginx/html
     index: index.html
     filename: default.conf
+logstash_version: 7.8.0
+logstash_user: root
+logstash_group: root
+journaldLimitBurst: 200000
+
+java_packages:
+  - java-1.8.0-openjdk
+elasticsearch_http_port: 9200
 
 # Attributes to change for infra
 vpc_id: vpc-4bb64132
@@ -22,3 +30,10 @@ subnets:
   private: subnet-a94474e1
 ansible_ssh_common_args: -o StrictHostKeyChecking=no
 ansible_ssh_user: ec2-user
+
+logstash_filters:
+  use: yes
+  config:
+    - name: grok
+      attrs:
+        match: '{ "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }'

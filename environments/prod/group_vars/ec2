@@ -6,3 +6,6 @@ ami:
   eu-west-2: ami-032598fcc7e9d1c7a
   us-east-1: ami-09d95fab7fff3776c
   us-west-2: ami-0e34e7b9ca0ace12d
+
+elk_type: t3a.xlarge
+logstash_type: t3a.medium

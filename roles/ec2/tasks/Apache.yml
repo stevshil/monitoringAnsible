@@ -9,7 +9,7 @@
   ec2:
     key_name: "{{ sshkey }}"
     group: "{{ secgrps['web'] }}"
-    instance_type: t2.micro
+    instance_type: "{{logstash_type}}"
     image: "{{ ami[region] }}"
     wait: true
     region: "{{ region }}"
