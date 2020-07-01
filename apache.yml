@@ -2,7 +2,6 @@
   become: True
   gather_facts: True
   roles:
-    - httpd
-    - posthttpd
+    - apachehttpd
     - java
     - logstash

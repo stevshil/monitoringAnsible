@@ -1,5 +1,5 @@
 # Attributes to change for system
-ansible_ssh_user: ec2-user
+ansible_ssh_user: ubuntu
 project_name: SteveMon
 env: prod
 sshkey: steveshillingacademyie
@@ -16,7 +16,7 @@ logstash_group: root
 journaldLimitBurst: 200000
 
 java_packages:
-  - java-1.8.0-openjdk
+  - openjdk-11-jdk
 elasticsearch_http_port: 9200
 
 # Attributes to change for infra
@@ -37,3 +37,6 @@ logstash_filters:
     - name: grok
       attrs:
         match: '{ "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }'
+
+logstash_outputs:
+  - name: stdout

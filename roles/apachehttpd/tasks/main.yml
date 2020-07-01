@@ -1,0 +1,9 @@
+- include_role:
+    name: ansible-role-apache
+  when: ansible_os_family == "Debian"
+- include_role:
+    name: httpd
+  when: ansible_os_family == "RedHat"
+- include_role:
+    name: posthttpd
+  when: ansible_os_family == "RedHat"

@@ -1,0 +1,7 @@
+nginx_yum_repo_enabled: false
+
+logstash_inputs:
+  -  name: file
+     config:
+       path: '"/var/log/messages"'
+       add_field: '{"app" => "nginx"}'

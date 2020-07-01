@@ -1,0 +1,5 @@
+logstash_inputs:
+  -  name: file
+     config:
+       path: '"/var/log/messages"'
+       add_field: '{"app" => "apache"}'

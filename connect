@@ -30,12 +30,14 @@ fi
 
 # Connect to server by group name
 group=$1
+user=$(grep ansible_ssh_user: $ANSIBLEENV/group_vars/all | awk '{print $2}')
 if grep "\[$group\]" $ANSIBLEENV/hosts >/dev/null 2>&1
 then
 	hostname=$(grep -A1 $group $ANSIBLEENV/hosts | tail -1 | awk '{print $1}')
 	if [ -n $hostname ]
 	then
-		ssh -i "$sshKeyFile" $hostname
+		echo "ssh -i "$sshKeyFile" $user@$hostname"
+		ssh -i "$sshKeyFile" $user@$hostname
 	else
 		echo "Host group is empty" 1>&2
 	fi

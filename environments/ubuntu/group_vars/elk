@@ -1,0 +1,36 @@
+elasticsearch_version: '7.x'
+elasticsearch_package_state: present
+
+elasticsearch_service_state: started
+elasticsearch_service_enabled: true
+
+elasticsearch_network_host: 0.0.0.0
+
+elasticsearch_heap_size_min: 2g
+elasticsearch_heap_size_max: 2g
+
+elasticsearch_node_name: steveelk
+elasticsearch_discovery_seed_hosts:
+  - "{{ hostvars[groups['elk'][0]].private_ip }}"
+elasticsearch_cluster:
+  initial_master_nodes:
+    - steveelk
+  name: stevecluster
+
+kibana_version: "7.x"
+
+kibana_package: kibana
+kibana_package_state: present
+
+kibana_service_state: started
+kibana_service_enabled: true
+
+kibana_config_template: kibana.yml.j2
+kibana_config_file_path: /etc/kibana/kibana.yml
+
+kibana_server_port: 5601
+kibana_server_host: "0.0.0.0"
+
+kibana_elasticsearch_url: "http://{{ hostvars[groups['elk'][0]].private_ip }}:9200"
+kibana_elasticsearch_username: ""
+kibana_elasticsearch_password: ""
