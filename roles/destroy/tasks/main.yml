@@ -3,6 +3,7 @@
     apache_id: "{{ hostvars[groups['apache'][0]].instance_id }}"
     nginx_id: "{{ hostvars[groups['nginx'][0]].instance_id }}"
     haproxy_id: "{{ hostvars[groups['proxy'][0]].instance_id }}"
+    elk_id: "{{ hostvars[groups['elk'][0]].instance_id }}"
 
 - name: Remove servers
   ec2:
@@ -13,6 +14,7 @@
     - "{{ apache_id }}"
     - "{{nginx_id}}"
     - "{{haproxy_id}}"
+    - "{{elk_id}}"
 
 # This is done automatically
 - name: remove servers from inventory
@@ -24,3 +26,4 @@
     - "{{ groups['apache'] }}"
     - "{{ groups['nginx'] }}"
     - "{{ groups['proxy'] }}"
+    - "{{ groups['elk'] }}"

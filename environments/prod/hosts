@@ -11,4 +11,3 @@ local2 ansible_host=127.0.0.1 ansible_connection=local
 [proxy]
 
 [elk]
-ec2-54-229-3-247.eu-west-1.compute.amazonaws.com instance_id=i-00a3ed0906d2673cd private_ip=172.31.25.142
