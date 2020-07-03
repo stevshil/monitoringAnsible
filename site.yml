@@ -9,6 +9,7 @@
   become: True
   gather_facts: True
   roles:
+    - common
     - elasticsearch
     - kibana
 
@@ -16,24 +17,26 @@
   become: True
   gather_facts: True
   roles:
-    - httpd
-    - posthttpd
+    - common
+    - apachehttpd
     - java
-    - logstash
+    - ansible-role-logstash
 
 - hosts: nginx
   become: True
   gather_facts: True
   roles:
+    - common
     - prenginx
     - nginx
     - java
-    - logstash
+    - ansible-role-logstash
 
 - hosts: proxy
   become: True
   gather_facts: True
   roles:
+    - common
     - haproxy
     - java
-    - logstash
+    - ansible-role-logstash

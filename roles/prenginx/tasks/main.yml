@@ -4,9 +4,9 @@
   register: nginx
   ignore_errors: yes
 
-# - name: nginx variable
-#   debug:
-#     msg: "{{ nginx }}"
+- name: nginx variable
+  debug:
+    msg: "{{ nginx }}"
 
 - name: Remove yum repo that amazon installs
   shell: rm -f /etc/yum.repos.d/nginx.conf
@@ -14,4 +14,5 @@
 
 - name: Install NGINX if Amazon Linux
   shell: amazon-linux-extras install -y nginx1
-  when: (ansible_distribution == "Amazon" ) and "{{ nginx.stdout_lines | length }} < 1"
+  when: (ansible_distribution == "Amazon" ) and nginx is failed
+  # when: (ansible_distribution == "Amazon" ) and "{{ nginx.stdout_lines | length }} < 1"

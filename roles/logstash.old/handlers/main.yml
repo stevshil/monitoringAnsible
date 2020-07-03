@@ -1,4 +1,4 @@
 - name: restart logstash
   service:
-    name: logstash.svc
+    name: logstash.service
     state: restarted

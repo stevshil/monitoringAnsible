@@ -15,3 +15,6 @@
 [submodule "roles/ansible-role-apache"]
 	path = roles/ansible-role-apache
 	url = https://github.com/geerlingguy/ansible-role-apache.git
+[submodule "roles/ansible-role-logstash"]
+	path = roles/ansible-role-logstash
+	url = https://github.com/stevshil/ansible-role-logstash.git

@@ -1,1 +1,30 @@
-- include_tasks: RHEL.yml
+- name: HAProxy version
+  debug:
+    msg: "{{ haproxy_version }}"
+
+- name: Install HAProxy specific
+  yum:
+    name: "haproxy-{{haproxy_version}}"
+    state: installed
+  when: haproxy_version != "latest"
+
+- name: Install HAProxy latest
+  yum:
+    name: "haproxy"
+    state: latest
+  when: haproxy_version == "latest"
+
+- name: Configure HAProxy
+  template:
+    src: "{{ansible_os_family}}.haproxy.cfg.j2"
+    dest: "{{ haproxy_cfg }}"
+    owner: "{{ haproxy_global.user }}"
+    group: "{{ haproxy_global.group }}"
+    mode: 0640
+  notify: "restart haproxy"
+
+- name: Start HAProxy if it is not started
+  service:
+    name: haproxy
+    state: started
+    enabled: yes
